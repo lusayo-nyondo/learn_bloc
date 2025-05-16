@@ -10,7 +10,14 @@ void main() {
           child: SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [Counter(), SizedBox(height: 8), CounterControls()],
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Counter(),
+                SizedBox(height: 8),
+                CounterWithListener(),
+                SizedBox(height: 8),
+                CounterControls(),
+              ],
             ),
           ),
         ),
@@ -24,9 +31,23 @@ class Counter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(
-      bloc: context.read<CounterBloc>(),
+    return BlocBuilder<CounterBloc, int>(
       builder: (context, state) => Center(child: Text('Count: $state')),
+    );
+  }
+}
+
+class CounterWithListener extends StatelessWidget {
+  const CounterWithListener({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<CounterBloc, int>(
+      listener:
+          (context, state) => print("Changed count to: $state in listener"),
+      child: Center(
+        child: Text('this widget listens for side effects to state change.'),
+      ),
     );
   }
 }
